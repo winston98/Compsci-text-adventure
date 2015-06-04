@@ -1,0 +1,33 @@
+
+/**
+ * Write a description of class Material here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Material
+{
+    private String material;
+    private int strength;
+    public String[] strengthChart = {"wood","copper","iron","stone","steel"};
+
+    public Material(String material)
+    {
+        this.material = material;
+        for(int i = 0; i < strengthChart.length; i++)
+        {
+            if(strengthChart[i].equals(material))
+                strength = i;
+        }
+    }
+
+    public int getStrength()
+    {
+        return strength;
+    }
+
+    public String getMaterial()
+    {
+        return material;
+    }
+}
