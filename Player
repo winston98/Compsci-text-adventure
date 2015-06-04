@@ -1,0 +1,150 @@
+
+/**
+ * Write a description of class Input here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+
+import java.util.Scanner;
+
+public class Player
+{
+    public static int x = 0, y = 0;
+    public static Map room1;
+    public static Inventory inventory;
+    
+    public static void main() {
+        inventory = new Inventory();
+        room1 = new Map();
+        Scanner kb = new Scanner(System.in);
+        String input;
+        do{
+            System.out.print(">");
+            input = kb.nextLine().toLowerCase();
+            if (processText(input)) {
+                System.out.println("Action successful!");
+            }
+            else {
+                System.out.println("Sorry, you can't " + input);
+            }
+        } while (input.compareTo("quit") != 0);
+    }
+    
+    public static boolean processText(String input) {
+        int position = input.indexOf(' ');
+        // ^first used to find the location of the space
+        
+        if (position < 1) {
+            return false;
+        }
+        
+        input = input.toLowerCase();
+        String actionString = input.substring(0,position);
+        String objectString = input.substring(position+1);
+        
+        // if the action is to move
+        if (actionString.compareTo("move") == 0) {
+            return move(objectString);
+        }
+        else if (actionString.compareTo("pickup") == 0) {
+            return pickUp(objectString);
+        }
+        else {
+            position = objectString.indexOf("with");
+            // now used for finding position of "with"
+            if (position > -1) {
+                String toolString = objectString.substring(position+5);
+                MapElement tool = inventory.findItem(toolString);
+                
+                if (tool != null) {
+                    objectString = objectString.substring(0,position-1);
+                    
+                    MapElement object = room1.mapArray[x][y].findElement(objectString);
+                    if (object!= null) {
+                        object.use(actionString,tool);
+                        return true;
+                    }
+                    object = inventory.findItem(objectString);
+                    if (object!= null) {
+                        object.use(actionString,tool);
+                        return true;
+                    }
+                    return false;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        
+        // if the action is to use an object in the MapSquare
+        MapElement object = room1.mapArray[x][y].findElement(objectString);
+        if (object!= null) {
+            object.use(actionString);
+            return true;
+        }
+        object = inventory.findItem(objectString);
+        if (object!= null) {
+            object.use(actionString);
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean pickUp(String objectName) {
+        MapElement object = room1.mapArray[x][y].findElement(objectName);
+        if (object != null && object.takeable) {
+            inventory.add(object);
+            room1.mapArray[x][y].remove(object);
+            return true;
+        }
+        return false;
+    }
+    
+    public static boolean move(String direction) {
+        boolean haveMoved = false;
+        if (direction.compareTo("up") == 0) {
+            if (y>0) {
+                y--;
+                haveMoved = true;
+            }
+            else {
+                haveMoved =  false;
+            }
+        }
+        else if (direction.compareTo("left") == 0) {
+            if (x>0) {
+                x--;
+                haveMoved =  true;
+            }
+            else {
+                haveMoved =  false;
+            }
+        }
+        else if (direction.compareTo("down") == 0) {
+            if (y<19) {
+                y++;
+                haveMoved =  true;
+            }
+            else {
+                haveMoved =  false;
+            }
+        }
+        else if (direction.compareTo("right") == 0) {
+            if (x<19) {
+                x++;
+                haveMoved =  true;
+            }
+            else {
+                haveMoved =  false;
+            }
+        }
+
+        if (haveMoved) {
+            System.out.println(room1.mapArray[x][y]);
+            return true;
+        }
+        return false;
+    }
+}
