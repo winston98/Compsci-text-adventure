@@ -1,0 +1,153 @@
+
+/**
+ * Write a description of class Door here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+
+import java.util.Arrays;
+
+public class Door extends MapElement
+{    
+    private int doorID;
+    public boolean isLocked;  
+    public static String name = "door";
+    public String specialName;
+
+    public Door(String specialName, Material type, int doorID, boolean isLocked, boolean isBroken) {
+        this.specialName = specialName;
+        this.doorID = doorID;
+        this.type = type;
+        this.isLocked = isLocked;
+        this.isBroken = isBroken;
+        takeable = false;
+        
+        String[] tempActionList = {"open","close","lock","unlock","break"};
+        actionList = tempActionList;
+    }
+
+    public Door() {
+        doorID = (int)(Math.random()*1000);
+        type = new Material("wood");
+        isLocked = false;
+        isBroken = false;
+        takeable = false;
+        
+        String[] tempActionList = {"open","close","lock","unlock","break"};
+        actionList = tempActionList;
+    }
+
+    public void use(String action) {
+        int index = actionIndexOf(action);
+        switch(index) {
+            case -1:
+                // should there be something here?
+                break;
+            case 0:
+                open();
+                break;
+            case 1:
+                close();
+                break;
+            case 2:
+                System.out.println("You need to use a key to unlock the door.");
+                break;
+            case 3:
+                System.out.println("You need to use a key to unlock the door.");
+                break;
+            case 4:
+                smash();
+                break;
+        }
+    }
+    
+    public void use(String action, MapElement tool) {
+        int index = actionIndexOf(action);
+        switch(index) {
+            case -1:
+                // should there be something here?
+                break;
+            case 0:
+                open();
+                break;
+            case 1:
+                close();
+                break;
+            case 2:
+                lock(tool);
+                break;
+            case 3:
+                unlock(tool);
+                break;
+            case 4:
+                smash(tool);
+                break;
+        }
+    }
+    
+    public void open() {
+        if (isLocked) {
+            System.out.println("The door is locked.");
+        }
+        else {
+            System.out.println("You open the door.");
+        }
+    }
+
+    public void close() {
+        System.out.println("You close the door.");
+    }
+
+    public void unlock(MapElement key) {
+        if (key.getID() == doorID) {
+            if (isLocked) {
+                isLocked = false;
+                System.out.println("You unlock the door.");
+            }
+            else {
+                System.out.println("The door is already unlocked.");
+            }
+        }
+        else {
+            System.out.println("You try to put the key in the lock, but it doesn't fit the door.");
+        }
+    }
+
+    public void lock(MapElement key) {
+        if (key.getID() == doorID) {
+            if (isLocked = false) {
+                isLocked = true;
+                System.out.println("You lock the door.");
+            }
+            else {
+                System.out.println("The door is already locked.");
+            }
+        }
+        else {
+            System.out.println("You try to put the key in the lock, but it doesn't fit the door.");
+        }
+    }
+
+    public void smash() {
+        if (type.getStrength() < 10) {
+            isBroken = true;
+            System.out.println("You break the door down with your fists.");
+        }
+    }
+
+    public void smash(MapElement item) {
+        if (type.getStrength() < item.type.getStrength()) {
+            isBroken = true;
+            System.out.println("You break the door down with " + item + ".");
+        }
+    }
+    
+    public int getID() {
+        return doorID;
+    }
+    
+    public String getName() {
+        return name;
+    }
+}
