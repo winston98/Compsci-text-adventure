@@ -1,0 +1,49 @@
+
+/**
+ * Write a description of class MapElement here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+
+//import java.util.Arrays;
+
+public abstract class MapElement
+{
+    //public static String[] actionList;
+    public String specialName;
+    public String[] actionList;
+    public Material type;
+    public boolean takeable;
+    public boolean isBroken;
+    
+    public abstract void use(String action);
+    /* {
+        // this should be overridden in any classes that inherit this
+        if (Arrays.asList(actionList).contains(action)) {
+            // do something
+        }
+    } */
+    
+    public abstract void use(String action, MapElement tool);
+    
+    public abstract String getName();
+    
+    public int actionIndexOf(String action) {
+        for (int i = 0; i < actionList.length; i++) {
+            if (actionList[i].compareTo(action) == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public int getID() {
+        return -1;
+        // so the code for key can compile
+    }
+    
+    public boolean isLocked() {
+        return false;
+    }
+}
