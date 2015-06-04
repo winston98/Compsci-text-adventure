@@ -1,0 +1,28 @@
+
+/**
+ * Write a description of class Map here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Map
+{
+    public MapSquare[][] mapArray;
+    
+    public Map() {
+        mapArray = new MapSquare[2][2];
+        /* for (MapSquare[] mapRow: mapArray) {
+            for (MapSquare mapRoom: mapRow) {
+                mapRoom = new MapSquare();
+            }
+        } */
+        for (int i = 0; i < mapArray.length; i++) {
+            for (int j = 0; j < mapArray[0].length; j++) {
+                mapArray[i][j] = new MapSquare();
+            }
+        }
+        mapArray[0][0].add(new Door());
+        mapArray[0][0].add(new Key());
+        mapArray[1][0].add(new Table());
+    }
+}
