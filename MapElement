@@ -47,3 +47,72 @@ public abstract class MapElement
         return false;
     }
 }
+
+// WINSTON'S MAP ELEMENT
+public abstract class MapElement
+{
+    //public static String[] actionList;
+    private String name;
+    private Material type;
+    private boolean takeable;
+    private boolean isBroken;
+    private String[] actionList;
+    
+    public MapElement(String name, Material type, boolean takeable, boolean isBroken, String[] actionList)
+    {
+        this.name = name;
+        this.type = type;
+        this.takeable = takeable;
+        this.isBroken = isBroken;
+        this.actionList = actionList;
+    }
+    
+    public abstract void use(String action);
+    /* {
+        // this should be overridden in any classes that inherit this
+        if (Arrays.asList(actionList).contains(action)) {
+            // do something
+        }
+    } */
+    
+//     public abstract String getName();
+    
+    public int actionIndexOf(String action) {
+        for (int i = 0; i < actionList.length; i++) {
+            if (actionList[i].compareTo(action) == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public int getID() {
+        return -1;
+        // so the code for key can compile
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
+    
+    public Material getType()
+    {
+        return type;
+    }
+    
+    public boolean getTakeable()
+    {
+        return takeable;
+    }
+    
+    public boolean getIsBroken()
+    {
+        return isBroken;
+    }
+    
+    public void destroy()
+    {
+        isBroken = true;
+    }
+}
