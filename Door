@@ -151,3 +151,91 @@ public class Door extends MapElement
         return name;
     }
 }
+
+//UPDATED
+public class Door extends MapElement
+{    
+    private int doorID;
+    private boolean isLocked;  
+
+    public Door(String specialName, Material type, int doorID, boolean isLocked, boolean isBroken) {
+        super(specialName, type, false, isBroken, new String[] {"open","close","lock","unlock","break"});
+        this.doorID = doorID;
+        this.isLocked = isLocked;
+    }
+
+    public Door() {
+        super("door", new Material("wood"), false, false, new String[] {"open","close","lock","unlock","break"});
+        doorID = (int)(Math.random()*1000);
+        isLocked = false;
+    }
+
+    public void use(String action) {
+        int index = actionIndexOf(action);
+        switch(index) {
+            case -1:
+                // should there be something here?
+                break;
+            case 0:
+                open();
+                break;
+            case 1:
+                close();
+                break;
+            case 2:
+                lock();
+                break;
+            case 3:
+                unlock();
+                break;
+            case 4:
+                smash();
+                break;
+        }
+    }
+    
+    public void open() {
+        if (isLocked) {
+            System.out.println("The door is locked.");
+        }
+        else {
+            System.out.println("You open the door.");
+        }
+    }
+
+    public void close() {
+        System.out.println("You close the door.");
+    }
+
+    public void unlock() {
+        /* if (inventory.contains(key)) {
+            isLocked = false;
+            System.out.println("You unlock the door.");
+        } */
+    }
+
+    public void lock() {
+        /* if (inventory.contains(key)) {
+            isLocked = true;
+            System.out.println("You lock the door.");
+        } */
+    }
+
+    public void smash() {
+        if (getType().getStrength() < 10) {
+            destroy();
+            System.out.println("You break the door down with your fists.");
+        }
+    }
+
+    public void smash(MapElement item) {
+        if (getType().getStrength() < item.getType().getStrength()) {
+            destroy();
+            System.out.println("You break the door down with " + item + ".");
+        }
+    }
+    
+    public int getID() {
+        return doorID;
+    }
+}
