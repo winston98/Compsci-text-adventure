@@ -77,3 +77,67 @@ public class Table extends MapElement
         return name;
     }
 }
+
+public class Table extends MapElement
+{
+    private int tableID;
+    private String[] onTable;
+
+    public Table(String specialName, Material type, boolean isBroken, int tableID, String[] onTable) {
+        super(specialName,type,false,isBroken, new String[] {"break"});
+        this.tableID = tableID;
+        this.onTable = onTable;
+    }
+
+    public Table() {
+        super("table",new Material("wood"), false, false, new String[] {"break"});
+        tableID = (int)(Math.random() * 1000);
+    }
+
+    public void use(String action) {
+        int toolIndex = action.indexOf('*');
+        int actionIndex;
+        if (toolIndex > -1) {
+            actionIndex = actionIndexOf(action.substring(0,toolIndex));
+            switch(actionIndex) {
+                case -1:
+                // should there be something here?
+                break;
+                case 0:
+                MapElement tool = Player.inventory.findItem(action.substring(actionIndex+1));
+                if (tool != null) {
+                    smash(Player.inventory.findItem(action.substring(actionIndex+1)));
+                }
+                break;
+            }
+        }
+
+        actionIndex = actionIndexOf(action);
+        switch(actionIndex) {
+            case -1:
+            // should there be something here?
+            break;
+            case 0:
+            smash();
+            break;
+        }
+    }    
+
+    public void smash() {
+        if (getType().getStrength() < 10) {
+            destroy();
+            System.out.print("You smash the table with your fists.");
+        }
+    }
+
+    public void smash(MapElement item) {
+        if (getType().getStrength() < item.getType().getStrength()) {
+            destroy();
+            System.out.print("You smash the table with " + item + ".");
+        }
+    }
+
+    public int getID() {
+        return tableID;
+    }
+}
