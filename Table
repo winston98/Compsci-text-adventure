@@ -5,30 +5,29 @@
  * @author (your name) 
  * @version (a version number or a date)
  */
+
+import java.util.ArrayList;
+
 public class Table extends MapElement
 {
-    private int tableID;
-    private String[] onTable;
-    public static String name = "table";
-    public String specialName;
+    private ArrayList<MapElement> onTable = new ArrayList<MapElement>();
+    private static String name = "table";
+    private String specialName;
     
-    public Table(String specialName, Material type, int tableID) {
-        this.specialName = specialName;
-        this.type = type;
-        this.tableID = tableID;
-        isBroken = false;
+    public Table(Material type, String specialName) {
+        super(type,false,false);
         
         String[] tempActionList = {"break"};
-        actionList = tempActionList;
+        setActionList(tempActionList);
+        
+        setSpecialName(specialName);
     }
     
     public Table() {
-        type = new Material("wood");;
-        tableID = (int)(Math.random() * 1000);
-        isBroken = false;
+        super(new Material("wood"),false,false);
         
         String[] tempActionList = {"break"};
-        actionList = tempActionList;
+        setActionList(tempActionList);
     }
     
     public void use(String action) {
@@ -56,24 +55,31 @@ public class Table extends MapElement
     }    
     
     public void smash() {
-        if (type.getStrength() < 10) {
-            isBroken = true;
+        if (getType().getStrength() < 10) {
+            destroy();
             System.out.print("You smash the table with your fists.");
         }
     }
     
     public void smash(MapElement item) {
-        if (type.getStrength() < item.type.getStrength()) {
-            isBroken = true;
+        if (getType().getStrength() < item.getType().getStrength()) {
+            destroy();
             System.out.print("You smash the table with " + item + ".");
         }
-    }
-    
-    public int getID() {
-        return tableID;
+        else {
+            System.out.print("you try to smash the table with " + item + ", but the table won't break.");
+        }
     }
     
     public String getName() {
         return name;
+    }
+    
+    public String toString() {  
+        String rString = super.toString() + "\nItems on table: ";
+        for (int i = 0; i < onTable.size(); i++) {
+            rString += onTable.get(i) + ", ";
+        }
+        return rString.substring(rString.length()-2);
     }
 }
