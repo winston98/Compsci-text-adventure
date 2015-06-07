@@ -99,13 +99,24 @@ public class Door extends MapElement
         if (isLocked) {
             System.out.println("The door is locked.");
         }
+        else if (isOpen) {
+            System.out.print("The door is already open.");
+        }
         else {
+            isOpen = true;
             System.out.println("You open the door.");
         }
     }
 
     public void close() {
-        System.out.println("You close the door.");
+        isOpen = false;
+        if (!isOpen) {
+            System.out.print("The door is already closed.");
+        }
+        else {
+            isOpen = false;
+            System.out.println("You close the door.");
+        }
     }
 
     public void unlock(MapElement key) {
