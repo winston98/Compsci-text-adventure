@@ -13,7 +13,7 @@ public class Inventory extends ArrayList<MapElement>
     public Inventory()
     {
         //inventory = new ArrayList<MapElement>();
-        add(new Key());
+        add(new Key(Material.WOOD,1,"Green Key"));
     }
     
     public void addItem(MapElement thing)
@@ -29,6 +29,14 @@ public class Inventory extends ArrayList<MapElement>
             }
         }
         return null;
+    }
+    
+    public String toString() {
+        String rString = "Inventory contains: ";
+        for (MapElement e: this) {
+            rString += "                   " + "\n";
+        }
+        return rString;
     }
 }
 
