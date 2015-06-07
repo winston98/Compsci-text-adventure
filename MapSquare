@@ -10,6 +10,37 @@ import java.util.ArrayList;
 
 public class MapSquare extends ArrayList<MapElement>
 {
+    private Door[] exits = new Door[4];
+    
+    public MapSquare() {
+    }
+    
+    public MapSquare(Door N, Door E, Door S, Door W) {
+        exits[0] = N;
+        exits[1] = E;
+        exits[2] = S;
+        exits[3] = W;
+    }
+    
+    public int findDoor(int direction) { 
+        // Starts looking for doors starting from direction. Useful for searching
+        // for multiple doors, but otherwise just leave direction = 0;
+        for (int i = direction; i < 4; i++) {
+            if (exits[i] != null) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public boolean canPass(int direction) {
+        return (exits[direction] == null || exits[direction].getIsOpen());
+    }
+    
+    public Door getDoor(int direction) {
+        return exits[direction];
+    }
+    
     public MapElement findElement(String objectName) {
         for (int i = 0; i < size(); i++) {
             if (get(i).getName().compareTo(objectName) == 0) {
@@ -20,9 +51,9 @@ public class MapSquare extends ArrayList<MapElement>
     }
     
     public String toString() {
-        String rString = "This room contains ";
+        String rString = "This room contains: ";
         for (int i = 0; i < size(); i++) {
-            rString+=(get(i).getName() + " ");
+            rString+=(get(i).getName() + "\n                    ");
         }
         return rString.substring(0,rString.length()-1);
     }
