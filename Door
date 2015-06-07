@@ -11,33 +11,42 @@ import java.util.Arrays;
 public class Door extends MapElement
 {    
     private int doorID;
-    public boolean isLocked;  
-    public static String name = "door";
-    public String specialName;
-
-    public Door(String specialName, Material type, int doorID, boolean isLocked, boolean isBroken) {
-        this.specialName = specialName;
+    private boolean isLocked = true;  
+    private boolean isOpen = true;
+    private static String name = "door";
+    
+    public Door(Material type, int doorID, boolean isLocked, boolean isOpen, String specialName) {
+        super(type,false,false);
         this.doorID = doorID;
-        this.type = type;
         this.isLocked = isLocked;
-        this.isBroken = isBroken;
-        takeable = false;
+        this.isOpen = isOpen;
+        setSpecialName(specialName);
         
         String[] tempActionList = {"open","close","lock","unlock","break"};
-        actionList = tempActionList;
+        setActionList(tempActionList);
     }
-
+    
     public Door() {
-        doorID = (int)(Math.random()*1000);
-        type = new Material("wood");
+        // creates a closed, unlocked door.
+        super(new Material("wood"),false,false);
+        doorID = Key.numberOfKeys;
         isLocked = false;
-        isBroken = false;
-        takeable = false;
-        
+        isOpen = false;
+
         String[] tempActionList = {"open","close","lock","unlock","break"};
-        actionList = tempActionList;
+        setActionList(tempActionList);
     }
 
+    public Door(Door other) {
+        super(other.getType(),other.getTakeable(),other.getIsBroken());
+        doorID = other.getID();
+        isLocked = other.getIsLocked();
+        isOpen = other.getIsOpen();
+        name = other.getName();
+        specialName = other.getSpecialName();
+        setActionList(other.getActionList());
+    }
+    
     public void use(String action) {
         int index = actionIndexOf(action);
         switch(index) {
@@ -130,15 +139,17 @@ public class Door extends MapElement
     }
 
     public void smash() {
-        if (type.getStrength() < 10) {
-            isBroken = true;
+        if (getType().getStrength() < 10) {
+            destroy();
+            isOpen = true;
             System.out.println("You break the door down with your fists.");
         }
     }
 
     public void smash(MapElement item) {
-        if (type.getStrength() < item.type.getStrength()) {
-            isBroken = true;
+        if (getType().getStrength() < item.getType().getStrength()) {
+            destroy();
+            isOpen = true;
             System.out.println("You break the door down with " + item + ".");
         }
     }
@@ -149,5 +160,9 @@ public class Door extends MapElement
     
     public String getName() {
         return name;
+    }
+    
+    public boolean getIsOpen() {
+        return isOpen;
     }
 }
