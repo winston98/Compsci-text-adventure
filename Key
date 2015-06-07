@@ -9,32 +9,32 @@ public class Key extends MapElement
 {
     public static int numberOfKeys;
     public static String name = "key";
-    public String specialName;
+    // the keys should have special names.
     public int keyID;
     
-    public Key(String specialName, Material type) {
-        this.specialName = specialName;
-        this.type = type;
-        keyID = numberOfKeys;
-        isBroken = false;
-        takeable = true;
+    public Key(Material type, int keyID, String specialName) {
+        super(type,true,false);
         
-        String[] tempActionList = {"use","fit"};
-        actionList = tempActionList;
+        this.keyID = keyID;
+        setSpecialName(specialName);
+        
+        String[] tempActionList = {"fit"};
+        setActionList(tempActionList);
         
         numberOfKeys++; // This may cause problems in the future, since doors and keys will need to be initialized in pairs.
     }
     
+    /* This should never be used - all keys should have special names to differentiate between them.
     public Key() {
-        type = new Material("wood");
-        keyID = numberOfKeys;
-        takeable = true;
+        super(new Material("wood"),true,false);
         
-        String[] tempActionList = {"use","fit"};
-        actionList = tempActionList;
+        keyID = numberOfKeys;
+        
+        String[] tempActionList = {"fit"};
+        setActionList(tempActionList);
         
         numberOfKeys++;
-    }
+    } */
     
     public void use(String action) {
         int index = actionIndexOf(action);
@@ -43,23 +43,7 @@ public class Key extends MapElement
                 // should there be something here?
                 break;
             case 0:
-                MapElement doorElement = Player.room1.mapArray[Player.x][Player.y].findElement("door");
-                if (doorElement != null) {
-                    Door door = (Door)doorElement;
-                    if (door.isLocked) {
-                       door.unlock((MapElement)this);
-                    }
-                    else {
-                       door.lock((MapElement)this);
-                    }
-                }
-                else {
-                    System.out.println("There is no door in this room!");
-                }
-                break;
-            case 1:
                 fit();
-                break;
         }
     }
     
@@ -68,20 +52,24 @@ public class Key extends MapElement
     }
     
     public void fit() {
-        int index = Player.room1.mapArray[Player.x][Player.y].indexOf("door");
-        if (index > -1) {
-            if (keyID == Player.room1.mapArray[Player.x][Player.y].get(index).getID()) {
-                System.out.print("The key fits in the lock.");
+        int doorIndex = Player.room1.mapArray[Player.x][Player.y].findDoor(0);
+        if (doorIndex > -1) {
+            if (Player.room1.mapArray[Player.x][Player.y].getDoor(doorIndex).getID() == keyID) {
+                System.out.print("The key fits in the " + Player.directions[doorIndex]);
+                do {
+                    doorIndex = Player.room1.mapArray[Player.x][Player.y].findDoor(doorIndex+1);
+                    if (doorIndex > -1 && Player.room1.mapArray[Player.x][Player.y].getDoor(doorIndex).getID() == keyID) {
+                        System.out.print(", " + Player.directions[doorIndex]);
+                    }
+                } while (doorIndex > -1);
+                System.out.println(" lock(s).");
+            }
+            else {
+                System.out.println("The key does not fit in any of the locks in the room.");
             }
         }
         else {
             System.out.println("There is no door in this room!");
-        }
-    }
-    
-    public void fit(Door lock) {
-        if (keyID == lock.getID()) {
-            System.out.print("The key fits in the lock.");
         }
     }
     
