@@ -21,8 +21,9 @@ public class Map
                 mapArray[i][j] = new MapSquare();
             }
         }
-        mapArray[0][0].add(new Door());
-        mapArray[0][0].add(new Key());
+        Door defaultDoor = new Door(new Material("wood"),0,true,false,null);
+        mapArray[0][0] = new MapSquare(null,defaultDoor,new Door(defaultDoor),null);
+        mapArray[0][0].add(new Key(new Material("wood"),0,"Red Key"));
         mapArray[1][0].add(new Table());
     }
 }
