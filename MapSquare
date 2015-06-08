@@ -11,6 +11,9 @@ import java.util.ArrayList;
 public class MapSquare extends ArrayList<MapElement>
 {
     private Door[] exits = new Door[4];
+    // each exit can have 3 things: nothing (freely walk to next room)
+    //                              door (unlock / open to go to next room)
+    //                              wall (can't go through here)
     
     public MapSquare() {
     }
@@ -26,7 +29,7 @@ public class MapSquare extends ArrayList<MapElement>
         // Starts looking for doors starting from direction. Useful for searching
         // for multiple doors, but otherwise just leave direction = 0;
         for (int i = direction; i < 4; i++) {
-            if (exits[i] != null) {
+            if (exits[i] != null && exits[i].getName().compareTo("wall") != 0) {
                 return i;
             }
         }
@@ -43,7 +46,7 @@ public class MapSquare extends ArrayList<MapElement>
     
     public MapElement findElement(String objectName) {
         for (int i = 0; i < size(); i++) {
-            if (get(i).getName().compareTo(objectName) == 0) {
+            if (get(i).getName().compareToIgnoreCase(objectName) == 0) {
                 return get(i);
             }
         }
@@ -51,10 +54,23 @@ public class MapSquare extends ArrayList<MapElement>
     }
     
     public String toString() {
-        String rString = "This room contains: ";
-        for (int i = 0; i < size(); i++) {
-            rString+=(get(i).getName() + "\n                    ");
+        String rString;
+        if (size() > 0) {
+            rString = "This room contains: ";
+            for (int i = 0; i < size(); i++) {
+                rString+=(get(i) + "\n                    ");
+            }
+            rString = rString.substring(0,rString.length()-20);
         }
-        return rString.substring(0,rString.length()-1);
+        else {
+            rString = "There are no items in the room. \n";
+        }
+        
+        for (int i = 0; i < 4; i++) {
+            if (exits[i] != null) {
+                rString += "There is a " + exits[i].getName() + " on the " + Player.directions[i] + " side. \n";
+            }
+        }
+        return rString;
     }
 }
