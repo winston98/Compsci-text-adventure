@@ -11,20 +11,16 @@ import java.util.ArrayList;
 public class Table extends MapElement
 {
     private ArrayList<MapElement> onTable = new ArrayList<MapElement>();
-    private static String name = "table";
-    private String specialName;
     
-    public Table(Material type, String specialName) {
-        super(type,false,false);
+    public Table(Material type, String name) {
+        super(type,false,false,name);
         
         String[] tempActionList = {"break"};
         setActionList(tempActionList);
-        
-        setSpecialName(specialName);
     }
     
     public Table() {
-        super(new Material("wood"),false,false);
+        super(new Material("wood"),false,false,"table");
         
         String[] tempActionList = {"break"};
         setActionList(tempActionList);
@@ -57,17 +53,17 @@ public class Table extends MapElement
     public void smash() {
         if (getType().getStrength() < 10) {
             destroy();
-            System.out.print("You smash the table with your fists.");
+            System.out.println("You smash the table with your fists.");
         }
     }
     
     public void smash(MapElement item) {
         if (getType().getStrength() < item.getType().getStrength()) {
             destroy();
-            System.out.print("You smash the table with " + item + ".");
+            System.out.println("You smash the table with " + item + ".");
         }
         else {
-            System.out.print("you try to smash the table with " + item + ", but the table won't break.");
+            System.out.println("you try to smash the table with " + item + ", but the table won't break.");
         }
     }
     
@@ -75,11 +71,16 @@ public class Table extends MapElement
         return name;
     }
     
-    public String toString() {  
-        String rString = super.toString() + "\nItems on table: ";
-        for (int i = 0; i < onTable.size(); i++) {
-            rString += onTable.get(i) + ", ";
+    public String toString() {
+        if (onTable.size() == 0) {
+            return super.toString();
         }
-        return rString.substring(rString.length()-2);
+        else {
+            String rString = super.toString() + "\n Items on table: ";
+            for (int i = 0; i < onTable.size(); i++) {
+                rString += onTable.get(i) + ", ";
+            }
+            return rString.substring(rString.length()-2);
+        }
     }
 }
