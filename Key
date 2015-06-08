@@ -8,15 +8,12 @@
 public class Key extends MapElement
 {
     public static int numberOfKeys;
-    public static String name = "key";
-    // the keys should have special names.
     public int keyID;
     
-    public Key(Material type, int keyID, String specialName) {
-        super(type,true,false);
+    public Key(Material type, int keyID, String name) {
+        super(type,true,false,name);
         
         this.keyID = keyID;
-        setSpecialName(specialName);
         
         String[] tempActionList = {"fit"};
         setActionList(tempActionList);
@@ -24,7 +21,7 @@ public class Key extends MapElement
         numberOfKeys++; // This may cause problems in the future, since doors and keys will need to be initialized in pairs.
     }
     
-    /* This should never be used - all keys should have special names to differentiate between them.
+    /* This should never be used - all keys should have unique names to differentiate between them.
     public Key() {
         super(new Material("wood"),true,false);
         
@@ -52,13 +49,13 @@ public class Key extends MapElement
     }
     
     public void fit() {
-        int doorIndex = Player.room1.mapArray[Player.x][Player.y].findDoor(0);
+        int doorIndex = Player.room1.mapArray[Player.y][Player.x].findDoor(0);
         if (doorIndex > -1) {
-            if (Player.room1.mapArray[Player.x][Player.y].getDoor(doorIndex).getID() == keyID) {
+            if (Player.room1.mapArray[Player.y][Player.x].getDoor(doorIndex).getID() == keyID) {
                 System.out.print("The key fits in the " + Player.directions[doorIndex]);
                 do {
-                    doorIndex = Player.room1.mapArray[Player.x][Player.y].findDoor(doorIndex+1);
-                    if (doorIndex > -1 && Player.room1.mapArray[Player.x][Player.y].getDoor(doorIndex).getID() == keyID) {
+                    doorIndex = Player.room1.mapArray[Player.y][Player.x].findDoor(doorIndex+1);
+                    if (doorIndex > -1 && Player.room1.mapArray[Player.y][Player.x].getDoor(doorIndex).getID() == keyID) {
                         System.out.print(", " + Player.directions[doorIndex]);
                     }
                 } while (doorIndex > -1);
@@ -75,5 +72,9 @@ public class Key extends MapElement
     
     public String getName() {
         return name;
+    }
+    
+    public int getID() {
+        return keyID;
     }
 }
