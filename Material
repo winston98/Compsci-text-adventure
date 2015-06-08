@@ -9,7 +9,7 @@ public class Material
 {
     private String material;
     private int strength;
-    public String[] strengthChart = {"wood","copper","iron","stone","steel"};
+    public String[] strengthChart = {"wood","copper","iron","stone","steel","unbreakable"};
 
     // is this a better way to do it?
     public static final Material WOOD = new Material("wood");
@@ -17,6 +17,7 @@ public class Material
     public static final Material IRON = new Material("iron");
     public static final Material STONE = new Material("stone");
     public static final Material STEEL = new Material("steel");
+    public static final Material UNBREAKABLE = new Material("unbreakable");
     
     public Material(String material)
     {
