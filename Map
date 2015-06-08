@@ -10,7 +10,7 @@ public class Map
     public MapSquare[][] mapArray;
     
     public Map() {
-        mapArray = new MapSquare[2][2];
+        mapArray = new MapSquare[3][3];
         /* for (MapSquare[] mapRow: mapArray) {
             for (MapSquare mapRoom: mapRow) {
                 mapRoom = new MapSquare();
@@ -21,9 +21,19 @@ public class Map
                 mapArray[i][j] = new MapSquare();
             }
         }
-        Door defaultDoor = new Door(new Material("wood"),0,true,false,null);
-        mapArray[0][0] = new MapSquare(null,defaultDoor,new Door(defaultDoor),null);
-        mapArray[0][0].add(new Key(new Material("wood"),0,"Red Key"));
-        mapArray[1][0].add(new Table());
+        Door defaultDoor = new Door(new Material("wood"),0,true,false,"door");
+        mapArray[0][0] = new MapSquare(new Wall(),null,null,new Wall());
+            mapArray[0][0].add(new Key(new Material("wood"),0,"Red Key"));
+        mapArray[0][1] = new MapSquare(new Wall(), new Wall(), null,null);
+        mapArray[0][2] = new MapSquare(new Wall(),new Wall(),new Door(defaultDoor),new Wall());
+        
+        mapArray[1][0] = new MapSquare(null, null, new Wall(), new Wall());
+        mapArray[1][1] = new MapSquare(null,new Door(defaultDoor),new Door(defaultDoor),null);
+        mapArray[1][2] = new MapSquare(mapArray[0][2].getDoor(3),new Wall(),new Door(defaultDoor),mapArray[1][1].getDoor(1));
+        
+        mapArray[2][0] = new MapSquare(new Wall(),null,new Wall(),new Wall());
+        mapArray[2][1] = new MapSquare(mapArray[1][1].getDoor(2),new Door(defaultDoor),new Wall(),null);
+        mapArray[2][2] = new MapSquare(mapArray[1][2].getDoor(2), new Wall(), new Wall(), mapArray[2][1].getDoor(1));
+            mapArray[2][2].add(new Table());
     }
 }
