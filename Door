@@ -15,12 +15,11 @@ public class Door extends MapElement
     private boolean isOpen = true;
     private static String name = "door";
     
-    public Door(Material type, int doorID, boolean isLocked, boolean isOpen, String specialName) {
-        super(type,false,false);
+    public Door(Material type, int doorID, boolean isLocked, boolean isOpen, String name) {
+        super(type,false,false,name);
         this.doorID = doorID;
         this.isLocked = isLocked;
         this.isOpen = isOpen;
-        setSpecialName(specialName);
         
         String[] tempActionList = {"open","close","lock","unlock","break"};
         setActionList(tempActionList);
@@ -28,7 +27,7 @@ public class Door extends MapElement
     
     public Door() {
         // creates a closed, unlocked door.
-        super(new Material("wood"),false,false);
+        super(new Material("wood"),false,false,"door");
         doorID = Key.numberOfKeys;
         isLocked = false;
         isOpen = false;
@@ -38,12 +37,11 @@ public class Door extends MapElement
     }
 
     public Door(Door other) {
-        super(other.getType(),other.getTakeable(),other.getIsBroken());
+        super(other.getType(),other.getTakeable(),other.getIsBroken(),other.getName());
         doorID = other.getID();
         isLocked = other.getIsLocked();
         isOpen = other.getIsOpen();
         name = other.getName();
-        specialName = other.getSpecialName();
         setActionList(other.getActionList());
     }
     
@@ -100,7 +98,7 @@ public class Door extends MapElement
             System.out.println("The door is locked.");
         }
         else if (isOpen) {
-            System.out.print("The door is already open.");
+            System.out.println("The door is already open.");
         }
         else {
             isOpen = true;
@@ -111,7 +109,7 @@ public class Door extends MapElement
     public void close() {
         isOpen = false;
         if (!isOpen) {
-            System.out.print("The door is already closed.");
+            System.out.println("The door is already closed.");
         }
         else {
             isOpen = false;
@@ -136,7 +134,7 @@ public class Door extends MapElement
 
     public void lock(MapElement key) {
         if (key.getID() == doorID) {
-            if (isLocked = false) {
+            if (isLocked == false) {
                 isLocked = true;
                 System.out.println("You lock the door.");
             }
@@ -163,14 +161,13 @@ public class Door extends MapElement
             isOpen = true;
             System.out.println("You break the door down with " + item + ".");
         }
+        else {
+            System.out.println("You try to break down the door with " + item + ", but the door won't break.");
+        }
     }
     
     public int getID() {
         return doorID;
-    }
-    
-    public String getName() {
-        return name;
     }
     
     public boolean getIsOpen() {
