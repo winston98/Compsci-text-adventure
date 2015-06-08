@@ -22,12 +22,9 @@ public class Player
         String input;
         do{
             System.out.print(">");
-            input = kb.nextLine().toLowerCase();
-            if (processText(input)) {
-                System.out.println("Action successful!");
-            }
-            else {
-                System.out.println("Sorry, you can't " + input + ".");
+            input = kb.nextLine().toLowerCase();    
+            if (!processText(input)) {
+                System.out.println("Sorry, you can't " + input + ".\n");
             }
         } while (input.compareTo("quit") != 0);
     }
@@ -39,7 +36,7 @@ public class Player
                 
         if (position < 1) {// any single-word commands should go here
             if (input.compareTo("look") == 0) {
-                System.out.println(room1.mapArray[x][y]);
+                System.out.println(room1.mapArray[y][x]);
                 return true;
             }
             else if (input.compareTo("inventory") == 0) {
@@ -52,7 +49,7 @@ public class Player
         }
         
         if (input.indexOf("pick up") > -1) {
-            position = input.indexOf(' ', position);
+            position = input.indexOf(' ', position+1);
             return pickUp(input.substring(position+1));
         }
         
@@ -67,8 +64,9 @@ public class Player
         else {
             // now used for finding position of "door"
             position = objectString.indexOf("door");
+            
             if (position > -1) {
-                Door objectDoor = analyzeDoorString(objectString,0);
+                Door objectDoor = analyzeDoorString(objectString);
                 if (objectDoor != null) {
                     position = objectString.indexOf("with");
                     // now used for finding position of "with"
@@ -76,9 +74,11 @@ public class Player
                         String toolString = objectString.substring(position+5);
                         MapElement tool = inventory.findItem(toolString);
                         objectDoor.use(actionString,tool);
+                        return true;
                     }
                     else {
                         objectDoor.use(actionString);
+                        return true;
                     }
                 }
                 else {
@@ -95,7 +95,7 @@ public class Player
                 if (tool != null) {
                     objectString = objectString.substring(0,position-1);
                     
-                    MapElement object = room1.mapArray[x][y].findElement(objectString);
+                    MapElement object = room1.mapArray[y][x].findElement(objectString);
                     if (object!= null) {
                         object.use(actionString,tool);
                         return true;
@@ -114,7 +114,7 @@ public class Player
         }
         
         // if the action is to use an object in the MapSquare
-        MapElement object = room1.mapArray[x][y].findElement(objectString);
+        MapElement object = room1.mapArray[y][x].findElement(objectString);
         if (object!= null) {
             object.use(actionString);
             return true;
@@ -128,10 +128,11 @@ public class Player
     }
     
     public static boolean pickUp(String objectName) {
-        MapElement object = room1.mapArray[x][y].findElement(objectName);
+        MapElement object = room1.mapArray[y][x].findElement(objectName);
         if (object != null && object.getTakeable()) {
             inventory.add(object);
-            room1.mapArray[x][y].remove(object);
+            room1.mapArray[y][x].remove(object);
+            System.out.println("You pick up the " + object.getName() + ". ");
             return true;
         }
         return false;
@@ -140,7 +141,7 @@ public class Player
     public static boolean move(String direction) {
         boolean haveMoved = false;
         if (direction.compareTo("up") == 0) {
-            if (y>0 && (room1.mapArray[x][y].canPass(0))) {
+            if (y>0 && (room1.mapArray[y][x].canPass(0))) {
                 y--;
                 haveMoved = true;
             }
@@ -149,7 +150,7 @@ public class Player
             }
         }
         else if (direction.compareTo("left") == 0) {
-            if (x>0 && (room1.mapArray[x][y].canPass(3))) {
+            if (x>0 && (room1.mapArray[y][x].canPass(3))) {
                 x--;
                 haveMoved =  true;
             }
@@ -158,7 +159,7 @@ public class Player
             }
         }
         else if (direction.compareTo("down") == 0) {
-            if (y<19 && (room1.mapArray[x][y].canPass(2))) {
+            if (y<room1.mapArray.length-1 && (room1.mapArray[y][x].canPass(2))) {
                 y++;
                 haveMoved =  true;
             }
@@ -167,7 +168,7 @@ public class Player
             }
         }
         else if (direction.compareTo("right") == 0) {
-            if (x<19 && (room1.mapArray[x][y].canPass(1))) {
+            if (x<room1.mapArray[0].length-1 && (room1.mapArray[y][x].canPass(1))) {
                 x++;
                 haveMoved =  true;
             }
@@ -176,31 +177,43 @@ public class Player
             }
         }
 
+        System.out.println("x: " + x + ", y: " + y);
+        
         if (haveMoved) {
-            System.out.println(room1.mapArray[x][y]);
+            System.out.println(room1.mapArray[y][x]);
             return true;
         }
         return false;
     }
     
-    public static Door analyzeDoorString(String objectString, int position) {
-        if (position < 0) {
-            return null;
-        }
-        if (position == 0) {
-            int doorDir = room1.mapArray[x][y].findDoor(0);
+    public static Door analyzeDoorString(String objectString) {
+        int position = objectString.indexOf("door");
+        position = objectString.lastIndexOf(' ',position); 
+        // ^this means that door has a modifier before it, like "east door"
+        if (position < 0) { // if there is no modifier
+            // pick the first available door
+            int doorDir = room1.mapArray[y][x].findDoor(0);
+            // finds the first available door in the room, if no doors available return null
             if (doorDir > -1) {
-                return room1.mapArray[x][y].getDoor(doorDir);
+                return room1.mapArray[y][x].getDoor(doorDir);
             }
             else {
                 return null;
             }
         }
-        else {
-            for (int i = 0; i < 4; i++) {
-                if (objectString.compareTo(directions[i]) == 0) {
-                    return room1.mapArray[x][y].getDoor(i);
+        else { // if there is a modifier, find out what it is. invalid modifiers return null.
+            String modifier = objectString.substring(0,position);
+            for (int i = 0; i < 4; i++) { 
+                // if the modifier is a direction (ex. "east door")
+                if (modifier.compareTo(directions[i]) == 0) {
+                    return room1.mapArray[y][x].getDoor(i);
                     // keep in mind this can still be null
+                }
+
+                // if the modifier is a specific door (ex. "red door")
+                if (room1.mapArray[y][x].getDoor(i) != null && 
+                    room1.mapArray[y][x].getDoor(i).getName().compareToIgnoreCase(objectString) == 0) {
+                    return room1.mapArray[y][x].getDoor(i);
                 }
             }
             return null;
