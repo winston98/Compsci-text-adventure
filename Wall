@@ -1,0 +1,22 @@
+
+/**
+ * Write a description of class Wall here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class Wall extends Door
+{
+    public Wall() {
+        // all walls are unbreakable doors that can't be opened
+        super(Material.UNBREAKABLE, -1, false, false, "wall");
+        
+        setActionList(new String[0]); // has no actions, so can't be opened
+    }
+
+    public void use(String action, MapElement tool) {
+    }
+    
+    public void use(String action){
+    }
+}
