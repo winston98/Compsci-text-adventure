@@ -1,0 +1,30 @@
+import java.awt.*;
+import javax.swing.JComponent;
+/**
+ * Write a description of class PlayerComponent here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class PlayerComponent extends JComponent
+{
+    Image img;
+    private int xStart, yStart;
+    public PlayerComponent()
+    {
+        img = Toolkit.getDefaultToolkit().createImage("player.png");
+           
+    }
+    
+    public void paintComponent(Graphics g)
+    {
+        g.drawImage(img,xStart,yStart,null);
+    }
+    
+    public void moveBy(int dx, int dy)
+    {
+        xStart += dx * 136;
+        yStart += dy * 136;
+        repaint();
+    }
+}
