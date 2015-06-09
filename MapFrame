@@ -1,0 +1,32 @@
+import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.event.*;
+/**
+ * Write a description of class MapPic here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class MapFrame
+{
+    public static void main(String[] args)
+    {
+        JFrame frame = new JFrame();
+        frame.setSize(680,690);
+        frame.setTitle("Map");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        BackgroundComponent background = new BackgroundComponent();
+        frame.add(background);
+        final PlayerComponent player = new PlayerComponent();
+        frame.add(player);
+        frame.setVisible(true);    
+        
+        class PlayerListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                player.moveBy(Player.x, Player.y); 
+            }
+        }
+    }
+}
