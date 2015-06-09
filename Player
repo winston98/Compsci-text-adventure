@@ -1,3 +1,10 @@
+/**
+ * Write a description of class Input here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+
 import java.util.Scanner;
 
 public class Player
@@ -33,6 +40,19 @@ public class Player
             }
             else if (input.compareTo("inventory") == 0) {
                 System.out.println(inventory);
+                return true;
+            }
+            else if (input.compareTo("help") == 0) {
+                System.out.println("Need help? \n" +
+                                   "There are several commands you can use: \n" + 
+                                   " -look: tells you which objects are in the room \n" +
+                                   " -inventory: tells you what items are in your inventory \n" + 
+                                   " -pick up + (object): picks up the specified object in the room \n" + 
+                                   " -check + (object): gives you a list of possible actions involving the object \n" + 
+                                   " -move + (cardinal direction): moves your character, if possible.\n" + 
+                                   "When describing doors, you must specify which door (ex. \"east door\")\n" + 
+                                   "Last, but not least, some actions require an object, so you must type \n" + 
+                                   " \"(action) + with + (object)\". Good luck and have fun!");
                 return true;
             }
             else {
@@ -117,7 +137,7 @@ public class Player
     
     public static boolean move(String direction) {
         boolean haveMoved = false;
-        if (direction.compareTo("north") == 0) {
+        if (direction.compareTo("north")== 0 || direction.compareTo("up")== 0) {
             if (y>0 && (room1.mapArray[y][x].canPass(0))) {
                 y--;
                 haveMoved = true;
@@ -126,7 +146,7 @@ public class Player
                 haveMoved =  false;
             }
         }
-        else if (direction.compareTo("west") == 0) {
+        else if (direction.compareTo("west")== 0 || direction.compareTo("left")== 0) {
             if (x>0 && (room1.mapArray[y][x].canPass(3))) {
                 x--;
                 haveMoved =  true;
@@ -135,7 +155,7 @@ public class Player
                 haveMoved =  false;
             }
         }
-        else if (direction.compareTo("south") == 0) {
+        else if (direction.compareTo("south")== 0 || direction.compareTo("down")==0) {
             if (y<room1.mapArray.length-1 && (room1.mapArray[y][x].canPass(2))) {
                 y++;
                 haveMoved =  true;
@@ -144,7 +164,7 @@ public class Player
                 haveMoved =  false;
             }
         }
-        else if (direction.compareTo("east") == 0) {
+        else if (direction.compareTo("east")== 0 || direction.compareTo("right")== 0) {
             if (x<room1.mapArray[0].length-1 && (room1.mapArray[y][x].canPass(1))) {
                 x++;
                 haveMoved =  true;
