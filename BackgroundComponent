@@ -1,0 +1,21 @@
+import java.awt.*;
+import javax.swing.JComponent;
+/**
+ * Write a description of class GUIComponent here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+public class BackgroundComponent extends JComponent
+{
+    Image img;
+    public BackgroundComponent()
+    {
+        img = Toolkit.getDefaultToolkit().createImage("map.png");
+    }
+    
+    public void paintComponent(Graphics g)
+    {
+        g.drawImage(img,0,0,null);
+    }
+}
