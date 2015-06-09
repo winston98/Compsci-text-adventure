@@ -168,6 +168,6 @@ public class Door extends MapElement
     }
     
     public String toString() {
-        return super.toString() + "locked? : " + isLocked + ". open? : " + isOpen;
+        return super.toString() + "\nLocked: " + isLocked + ". Open?" + isOpen + ".";
     }
 }
